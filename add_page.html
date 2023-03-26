@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+  <!-- bootstrap  -->
+  <import bootstrap here>
+  <!-- jquery  -->
+  <import jquery here>
+  <!-- data table  -->
+  <import datatable here>
+</head>
+
+<body>
+  <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="<?= url ?>" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+        <!-- <svg class="bi me-2" width="40" height="32"><use xlink:href="<?= url ?>"></use></svg> -->
+        <span class="fs-4">Arthit shop</span>
+      </a>
+
+      <ul class="nav nav-pills">
+        <li class="nav-item nav-link"><a class="text-decoration-none" href="<your active web site url>?page=<your page name>" >หน้าขายสินค้า</a></li>
+        <li class="nav-item nav-link"><a class="text-decoration-none" href="<your active web site url>?page=<your page name>">หน้าเพิ่มสินค้า</a></li>
+      </ul>
+    </header>
+  <div class="container-fluid">
+    <!-- <p><a href='<?= url ?>'>ขายสินค้า</a></p> -->
+    <div id="mode" class="text-primary mb-3">เพิ่มรายการสินค้า</div>
+    <div class="row mb-3">
+      <div class="col-6">
+        <label for="firstName" class="form-label">ชื่อสินค้า</label>
+        <input type="text" class="form-control" id="product" placeholder="ชื่อสินค้า" value="" required="">
+        <div class="invalid-feedback">
+          Valid first name is required.
+        </div>
+      </div>
+      <div class="col-6">
+        <label for="firstName" class="form-label">ราคาสินค้า</label>
+        <input type="number" class="form-control" id="price" placeholder="ราคาสินค้า" value="" required="">
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-4 d-grid">
+        <button class="btn btn-primary" value="addProduct" onclick="addData()">เพิ่มสินค้า</button>
+      </div>
+      <div class="col-4 d-grid">
+        <button class="btn btn-warning" value="updateProduct" onclick="updateData()">อัพเดทข้อมูล</button>
+      </div>
+      <div class="col-4 d-grid">
+        <button class="btn btn-warning" value="clear" onclick="clearInput()">ล้างข้อมูล</button>
+      </div>
+    </div>
+    <table id="productTable" class="display" width="100%">
+
+    </table>
+  </div>
+</body>
+<?!= include('add_ctrl') ?>
+
+</html>
