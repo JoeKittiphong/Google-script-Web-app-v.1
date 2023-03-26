@@ -1,34 +1,32 @@
 <script>
   readData()
+  getProductList()
+
+
   function addData(){
-    let product = $("#product").val()
-    let price = $("#price").val()
+    let product = $("#selectNumber").val()
+    let price = $("#count").val()
+    let amount = parseInt($("#count").val()) * parseInt($("#priceVlaue").val())
     google.script.run.withSuccessHandler(function(res){
       clearInput()
       readData()
-    }).create("ชีต1",[product, price])
+    }).create("ชีต2",[product, price,amount])
   }
-
-  
 
   function readData(){
     google.script.run.withSuccessHandler(function(res){
       console.log(typeof(res))
-      $("#productTable").DataTable({
+      $("#orderTable").DataTable({
         data : res,
         columns:[
           {title : 'ID'},
           {title : 'วันที่'},
           {title : 'สินค้า'},
-          {title : 'ราคา'},
-          {title : 'แก้ไข',
+          {title : 'จำนวนขายได้'},
+          {title : 'ยอดขาย'},
+          {title : 'ลบรายการ',
             "render" : function(data, type){
-              data = '<input class="btn btn-warning" type="button" value="แก้ไขสินค้า" onclick="getUpdate(this)">'
-              return data}
-            },
-          {title : 'ลบ',
-            "render" : function(data, type){
-              data = '<input class="btn btn-danger" type="button" value="ลบสินค้า" onclick="deleteData(this)">'
+              data = '<input class="btn btn-danger" type="button" value="ลบรายการ" onclick="deleteData(this)">'
               return data}
           },
         ],
@@ -37,7 +35,7 @@
         retrieve: false,
         paging: false
       })
-    }).read("ชีต1")
+    }).read("ชีต2")
   }
   function clearInput(){
     $("#product").val("")
@@ -45,30 +43,31 @@
     // $("#mode").val("")
   }
 
-  function getUpdate(element){
-    let updateID = $(element).parents('tr').find("td:nth-child(1)").text()
-    let updateProduct = $(element).parents('tr').find("td:nth-child(3)").text()
-    let updatePrice = $(element).parents('tr').find("td:nth-child(4)").text()
-
-    $("#mode").val(updateID)
-    $("#product").val(updateProduct)
-    $("#price").val(updatePrice)
-    dataUpdate = [updateID,updateProduct,updatePrice]
-    console.log($("#mode").val())
-  }
-  
-  function updateData(){
-    console.log($("#mode").val())
-    google.script.run.withSuccessHandler(function(res){
-      readData()      
-      clearInput()
-    }).update("ชีต1",$("#mode").val(),[$("#product").val(),$("#price").val()])
-  }
   function deleteData(element){
     let deleteID = $(element).parents('tr').find("td:nth-child(1)").text()
     console.log(deleteID)
     google.script.run.withSuccessHandler(function(res){
       readData()
-    }).remove("ชีต1",deleteID)
+    }).remove("ชีต2",deleteID)
   }
+
+// call from sheet1 
+  function getProductList(){
+    google.script.run.withSuccessHandler(function(res){
+      var options = res;
+        $('#selectNumber').empty();
+        $.each(options, function(i, p) {
+        $('#selectNumber').append($('<option class="dropdown-item"></option>').val(p).html(p));
+        targetPrice()
+    })
+    }).getProductName("ชีต1")
+  }
+
+  function targetPrice(){
+    google.script.run.withSuccessHandler(function(res){
+      console.log(res)
+      $("#priceVlaue").val(res)
+    }).selectPrice("ชีต1",$("#selectNumber").val())
+  }
+  
 </script>
