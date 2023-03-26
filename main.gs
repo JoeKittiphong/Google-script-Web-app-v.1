@@ -1,8 +1,7 @@
-const url = "<your google sheet URL>"
+const url = "<googlesheet url>"
 
-function doGet() {
-  var template = HtmlService.createTemplateFromFile('sell_page');
-  return template.evaluate().setSandboxMode(HtmlService.SandboxMode.IFRAME);
+function doGet(e) {
+  return HtmlService.createTemplateFromFile('sell_page').evaluate()  
 }
 
 function include(filename){
@@ -73,4 +72,14 @@ function getProductName(productSheeet){
   }
   data.shift()
   return data
+}
+
+function selectPrice(deleteAtSheet,productName){
+  let sheet = initSheet(url, deleteAtSheet)
+  for(let i=1; i<=sheet.getLastRow();i++){
+    if(sheet.getRange(i,3).getValue() == productName){
+      return sheet.getRange(i,4).getValue()
+      break
+    }
+  }
 }
