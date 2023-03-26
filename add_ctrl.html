@@ -1,0 +1,74 @@
+<script>
+  readData()
+  function addData(){
+    let product = $("#product").val()
+    let price = $("#price").val()
+    google.script.run.withSuccessHandler(function(res){
+      clearInput()
+      readData()
+    }).create("ชีต1",[product, price])
+  }
+
+  
+
+  function readData(){
+    google.script.run.withSuccessHandler(function(res){
+      console.log(typeof(res))
+      $("#productTable").DataTable({
+        data : res,
+        columns:[
+          {title : 'ID'},
+          {title : 'วันที่'},
+          {title : 'สินค้า'},
+          {title : 'ราคา'},
+          {title : 'แก้ไข',
+            "render" : function(data, type){
+              data = '<input class="btn btn-warning" type="button" value="แก้ไขสินค้า" onclick="getUpdate(this)">'
+              return data}
+            },
+          {title : 'ลบ',
+            "render" : function(data, type){
+              data = '<input class="btn btn-danger" type="button" value="ลบสินค้า" onclick="deleteData(this)">'
+              return data}
+          },
+        ],
+        destroy: true,
+        searching: false,
+        retrieve: false,
+        paging: false
+      })
+    }).read("ชีต1")
+  }
+  function clearInput(){
+    $("#product").val("")
+    $("#price").val("")
+    // $("#mode").val("")
+  }
+
+  function getUpdate(element){
+    let updateID = $(element).parents('tr').find("td:nth-child(1)").text()
+    let updateProduct = $(element).parents('tr').find("td:nth-child(3)").text()
+    let updatePrice = $(element).parents('tr').find("td:nth-child(4)").text()
+
+    $("#mode").val(updateID)
+    $("#product").val(updateProduct)
+    $("#price").val(updatePrice)
+    dataUpdate = [updateID,updateProduct,updatePrice]
+    console.log($("#mode").val())
+  }
+  
+  function updateData(){
+    console.log($("#mode").val())
+    google.script.run.withSuccessHandler(function(res){
+      readData()      
+      clearInput()
+    }).update("ชีต1",$("#mode").val(),[$("#product").val(),$("#price").val()])
+  }
+  function deleteData(element){
+    let deleteID = $(element).parents('tr').find("td:nth-child(1)").text()
+    console.log(deleteID)
+    google.script.run.withSuccessHandler(function(res){
+      readData()
+    }).remove("ชีต1",deleteID)
+  }
+</script>
